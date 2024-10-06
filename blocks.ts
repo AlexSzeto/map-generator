@@ -23,7 +23,7 @@ namespace mapGen {
   //% block="generate height terrain with $tiles at size $size over $cover as island $island || on tilemap $tilemap"
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% size.defl=10
-  //% dover.defl="tileset_tile_picker"
+  //% dover.shadow="tileset_tile_picker"
   //% tilemap.shadow="variables_get"
   //% tilemap.defl="tilemap"
   export function generateHeightTerrain(tiles: Image[], size: number = 10, cover: Image = null, island: boolean = false, tilemap: tiles.TileMapData = null) {
