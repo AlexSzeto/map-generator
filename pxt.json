@@ -10,7 +10,7 @@
         "README.md",
         "assets.json",
         "seeded-random.ts",
-        "map-generator.ts",
+        "simplex-noise.ts",
         "blocks.ts"
     ],
     "testFiles": [
