@@ -15,12 +15,12 @@ namespace mapGen {
 
     constructor() {
       for (let i = 0; i < 256; i++) {
-        this.p.push(seededRandom.next() * 256)
+        this.p.push(Math.floor(seededRandom.next() * 256))
+      }
 
-        // To remove the need for index wrapping, double the permutation table length
-        for (let i = 0; i < 512; i++) {
-          this.perm.push(this.p[i & 255])
-        }
+      // To remove the need for index wrapping, double the permutation table length
+      for (let i = 0; i < 512; i++) {
+        this.perm.push(this.p[i & 255])
       }
     }
 
