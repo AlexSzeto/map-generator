@@ -90,7 +90,8 @@ namespace mapGen {
       }
 
       // Add contributions from each corner to get the final noise value
-      return 70 * (n0 + n1 + n2)
+      // normalize to value between 0 and 1
+      return (70 * (n0 + n1 + n2) + 1) * 0.5
     }
   }
 }
