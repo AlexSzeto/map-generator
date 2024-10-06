@@ -58,22 +58,22 @@ namespace mapGen {
     }
   }
 
-  //% block="generate landscape at scale $scale from y $groundY rise height $mountainHeight fall depth $valleyDepth layer thickness $layerDepth || on tilemap $tilemap"
-  //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
+  //% block="generate landscape with $layers at scale $scale from y $groundY rise height $mountainHeight fall depth $valleyDepth layer thickness $layerDepth || on tilemap $tilemap"
+  //% layers.shadow="lists_create_with" layers.defl="tileset_tile_picker"
   //% scale.defl=10
-  //% groundY.defl=10
-  //% mountainHeight.defl=8
+  //% groundY.defl=12
+  //% mountainHeight.defl=6
   //% valleyDepth.defl=4
-  //% layerDepth.defl=12
+  //% layerDepth.defl=8
   //% tilemap.shadow="variables_get"
   //% tilemap.defl="tilemap"
   export function generateLandscape(
     layers: Image[],
     scale: number = 10,
-    groundY: 10,
-    mountainHeight: number = 8,
+    groundY: number = 12,
+    mountainHeight: number = 6,
     valleyDepth: number = 4,
-    layerDepth: number = 12,
+    layerDepth: number = 8,
     tilemap: tiles.TileMapData = null
   ) {
     if (tilemap == null) {
@@ -89,17 +89,17 @@ namespace mapGen {
       const noiseValue = noise.getValue(x / scale, 0) - 0.5
       let depth = groundY - valleyDepth
         + noiseValue * (noiseValue < 0 ? mountainHeight : valleyDepth)
-      let prev: number
+      let prev = Math.max(0, depth)
 
-      for (let layer = 1; layer < layers.length; layer++) {
+      for (let layer = 0; layer < layers.length; layer++) {
         prev = Math.max(0, depth)
         depth = Math.max(0, depth
           + layerDepth
-          + (noise.getValue(x / scale, layer * layerDepth / scale) - 0.5) * layerDepth / 4)
+          + (noise.getValue(x / scale, (layer + 1) * layerDepth / scale) - 0.5) * layerDepth / 2)
 
         for (let y = prev; y < depth && y < tilemap.height; y++) {
           if (tilemap.isWall(x, y)) continue
-          tilemap.setTile(x, y, layerIndices[layer - 1])
+          tilemap.setTile(x, y, layerIndices[layer])
         }
       }
 
