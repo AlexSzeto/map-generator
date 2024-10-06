@@ -14,57 +14,40 @@ namespace mapGen {
     return imageList.map(image => getTileIndex(tilemap, image))
   }
 
-  //% block="generate terrain with $tiles at size $size || on tilemap $tilemap"
+  function getGradient(x: number, y: number, width: number, height: number): number {
+    const dx = 1.0 - Math.abs(x - width / 2) / (width / 2)
+    const dy = 1.0 - Math.abs(y - height / 2) / (height / 2)
+    return dx * dy
+  }
+
+  //% block="generate height terrain with $tiles at size $size over $cover as island $island || on tilemap $tilemap"
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% size.defl=10
-  //% tilemap.shadow=variables_get
-  //% tilemap.defl=tilemap
-  export function generateHeightMapTerrain(tiles: Image[], size: number = 10, tilemap: tiles.TileMapData = null) {
+  //% dover.defl="tileset_tile_picker"
+  //% tilemap.shadow="variables_get"
+  //% tilemap.defl="tilemap"
+  export function generateHeightTerrain(tiles: Image[], size: number = 10, cover: Image = null, island: boolean = false, tilemap: tiles.TileMapData = null) {
     if (tilemap == null) {
       if (!game.currentScene().tileMap) return
       tilemap = game.currentScene().tileMap.data
     }
 
+    const coverTileIndex = cover ? getTileIndex(tilemap, cover) : 0
     const noise = new mapGen.SimplexNoise()
     const tileIndices = getTileIndices(tilemap, tiles)
     const heightStep = 1.0 / tiles.length
 
     for (let x = 0; x < tilemap.width; x++) {
       for (let y = 0; y < tilemap.height; y++) {
-        const height = noise.getValue(x / size, y / size)
-        for (let index = 0; index < tiles.length; index++) {
-          if (height < (index + 1) * heightStep) {
-            tilemap.setTile(x, y, tileIndices[index])
-            break
-          }
-        }
-      }
-    }
-  }
-
-  //% block="generate blobs with $blobTile covering $coverTile at size $size coverage $coverage % || on tilemap $tilemap"
-  //% blobTile.shadow=tileset_tile_picker
-  //% coverTile.shadow=tileset_tile_picker
-  //% size.defl=10
-  //% coverage.defl=33
-  //% tilemap.shadow=variables_get
-  //% tilemap.defl=tilemap
-  export function generateTileBlobs(blobTile: Image, coverTile: Image, size: number = 10, coverage: number = 50, tilemap: tiles.TileMapData = null) {
-    if (tilemap == null) {
-      if (!game.currentScene().tileMap) return
-      tilemap = game.currentScene().tileMap.data
-    }
-
-    const noise = new mapGen.SimplexNoise()
-    const blobTileIndex = getTileIndex(tilemap, blobTile)
-    const coverTileIndex = getTileIndex(tilemap, coverTile)
-
-    for (let x = 0; x < tilemap.width; x++) {
-      for (let y = 0; y < tilemap.height; y++) {
         if (tilemap.getTile(x, y) == coverTileIndex) {
-          if (noise.getValue(x / size, y / size) * 100 <= coverage) {
-            tilemap.setTile(x, y, blobTileIndex)
-          }            
+          const height = noise.getValue(x / size, y / size)
+            * (island ? getGradient(x, y, tilemap.width, tilemap.height) : 1)
+          for (let index = 0; index < tiles.length; index++) {
+            if (height < (index + 1) * heightStep && tileIndices[index] > 0) {
+              tilemap.setTile(x, y, tileIndices[index])
+              break
+            }
+          }
         }
       }
     }
