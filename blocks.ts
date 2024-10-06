@@ -14,7 +14,7 @@ namespace mapGen {
     return imageList.map(image => getTileIndex(tilemap, image))
   }
 
-  //% block="generate height map terrain with tiles $tiles at size $size || on tilemap $tilemap"
+  //% block="generate terrain with $tiles at size $size || on tilemap $tilemap"
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% size.defl=10
   //% tilemap.shadow=variables_get
@@ -42,11 +42,11 @@ namespace mapGen {
     }
   }
 
-  //% block="generate tile blobs with $blobTile covering $coverTile at size $size coverage percent $coverage || on tilemap $tilemap"
+  //% block="generate blobs with $blobTile covering $coverTile at size $size coverage $coverage % || on tilemap $tilemap"
   //% blobTile.shadow=tileset_tile_picker
   //% coverTile.shadow=tileset_tile_picker
   //% size.defl=10
-  //% coverage.defl=50
+  //% coverage.defl=33
   //% tilemap.shadow=variables_get
   //% tilemap.defl=tilemap
   export function generateTileBlobs(blobTile: Image, coverTile: Image, size: number = 10, coverage: number = 50, tilemap: tiles.TileMapData = null) {
