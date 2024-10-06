@@ -1,9 +1,11 @@
-//% color="#db9627" icon="\uf279" block="Map Generator"
+//% color="#ffb236" icon="\uf279" block="Map Generator"
 namespace mapGen {
 
-  //% block="generate height map terrain with tiles $tiles at scale $scale"
+  //% block="generate height map terrain with tiles $tiles at scale $scale || on tilemap $tilemap"
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% scale.defl=10
+  //% tilemap.shadow=variables_get
+  //% tilemap.defl=tilemap
   export function generateHeightMapTerrain(tiles: Image[], scale: number = 10, tilemap: tiles.TileMapData = null) {
     if (tilemap == null) {
       if (!game.currentScene().tileMap) return
