@@ -43,8 +43,8 @@ namespace mapGen {
   }
 
   //% block="generate tile blobs with $blobTile covering $coverTile at size $size coverage percent $coverage || on tilemap $tilemap"
-  //% blobTile.defl=tileset_tile_picker
-  //% coverTile.defl=tileset_tile_picker
+  //% blobTile.shadow=tileset_tile_picker
+  //% coverTile.shadow=tileset_tile_picker
   //% size.defl=10
   //% coverage.defl=50
   //% tilemap.shadow=variables_get
