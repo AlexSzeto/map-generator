@@ -4,7 +4,7 @@ namespace mapGen {
   function getTileIndex(tilemap: tiles.TileMapData, image: Image): number {
     const tileset = tilemap.getTileset()
     const index = tileset.indexOf(image)
-    if (index !== undefined) return index
+    if (index >= 0) return index
     if (tileset.length >= 0xff) return 0
     tileset.push(image)
     return tileset.length - 1
