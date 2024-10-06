@@ -86,9 +86,8 @@ namespace mapGen {
 
     for (let x = 0; x < tilemap.width; x++) {
 
-      const noiseValue = noise.getValue(x / scale, 0) - 0.5
-      let depth = groundY - valleyDepth
-        + noiseValue * (noiseValue < 0 ? mountainHeight : valleyDepth)
+      const noiseValue = noise.getValue(x / scale, 0) - 0.5 * 2
+      let depth = groundY + noiseValue * (noiseValue < 0 ? mountainHeight : valleyDepth)
       let prev = Math.max(0, depth)
 
       for (let layer = 0; layer < layers.length; layer++) {
