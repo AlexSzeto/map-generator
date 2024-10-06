@@ -15,15 +15,21 @@ namespace mapGen {
   }
 
   function getGradient(x: number, y: number, width: number, height: number): number {
-    const dx = 1.0 - Math.abs(x - width / 2) / (width / 2)
-    const dy = 1.0 - Math.abs(y - height / 2) / (height / 2)
-    return dx * dy
+    const dx = Math.abs(x - width / 2) / (width / 2)
+    const dy = Math.abs(y - height / 2) / (height / 2)
+    return (1 - dx * dx) * (1 - dy * dy)
+  }
+
+  //% block="set generator seed to $newSeed"
+  //% newSeed.defl=0
+  export function resetSeed(newSeed: number = 0): void {
+    seededRandom.reset(newSeed)
   }
 
   //% block="generate height terrain with $tiles at size $size over $cover as island $island || on tilemap $tilemap"
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% size.defl=10
-  //% dover.shadow="tileset_tile_picker"
+  //% cover.shadow="tileset_tile_picker"
   //% tilemap.shadow="variables_get"
   //% tilemap.defl="tilemap"
   export function generateHeightTerrain(tiles: Image[], size: number = 10, cover: Image = null, island: boolean = false, tilemap: tiles.TileMapData = null) {
@@ -43,8 +49,10 @@ namespace mapGen {
           const height = noise.getValue(x / size, y / size)
             * (island ? getGradient(x, y, tilemap.width, tilemap.height) : 1)
           for (let index = 0; index < tiles.length; index++) {
-            if (height < (index + 1) * heightStep && tileIndices[index] > 0) {
-              tilemap.setTile(x, y, tileIndices[index])
+            if (height < (index + 1) * heightStep) {
+              if (tileIndices[index] > 0) {
+                tilemap.setTile(x, y, tileIndices[index])                
+              }
               break
             }
           }

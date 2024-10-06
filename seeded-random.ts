@@ -1,5 +1,5 @@
 namespace seededRandom {
-  let seed = 0
+  let seed = randint(0, 0xffffffff)
 
   export function reset(newSeed: number): void {
     seed = newSeed
