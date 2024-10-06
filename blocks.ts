@@ -1,3 +1,4 @@
+//% color="#db9627" icon="\uf279" block="Map Generator"
 namespace mapGen {
 
   //% block="generate height map terrain with tiles $tiles at scale $scale"
