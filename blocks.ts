@@ -27,11 +27,9 @@ namespace mapGen {
   }
 
   //% block="generate terrain with $tiles at scale $scale as island $island || between row $top to $bottom column $left to $right"
-  //% inlineInputMode=inline
+  //% expandableArgumentMode="toggle"
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% scale.defl=10
-  //% tilemap.shadow="variables_get"
-  //% tilemap.defl="tilemap"
   //% top.defl=0 bottom.defl=255 left.defl=0 right.defl=255
   export function generateTerrain(
     tiles: Image[],
@@ -63,11 +61,11 @@ namespace mapGen {
       for (let y = top; y <= bottom; y++) {
         if(tilemap.isWall(x, y)) continue
         const height = noise.getValue(x / scale, y / scale)
-          * (island ? getGradient(x, y, mapWidth, mapHeight) : 1)
+          * (island ? getGradient(x - left, y - top, mapWidth, mapHeight) : 1)
         for (let index = 0; index < tiles.length; index++) {
           if (height < (index + 1) * heightStep) {
             if (tileIndices[index] > 0) {
-              tilemap.setTile(x, y, tileIndices[index])                
+              tilemap.setTile(x, y, tileIndices[index])
             }
             break
           }
@@ -77,14 +75,12 @@ namespace mapGen {
   }
 
   //% block="generate landscape with $layers at scale $scale from y $groundY || rise $mountainHeight fall $valleyDepth underground layer thickness $layerDepth"
-  //% inlineInputMode=inline
   //% layers.shadow="lists_create_with" layers.defl="tileset_tile_picker"
   //% scale.defl=10
   //% groundY.defl=12
   //% mountainHeight.defl=6
   //% valleyDepth.defl=4
   //% layerDepth.defl=8
-  //% tilemap.shadow="variables_get"
   export function generateLandscape(
     layers: Image[],
     scale: number = 10,
