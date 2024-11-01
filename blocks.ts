@@ -56,11 +56,14 @@ namespace mapGen {
     const tileIndices = getTileIndices(tilemap, tiles)
     const heightStep = 1.0 / tiles.length
 
+    const mapWidth = right - left + 1
+    const mapHeight = bottom - top + 1
+
     for (let x = left; x <= right; x++) {
-      for (let y = left; y <= right; y++) {
+      for (let y = top; y <= bottom; y++) {
         if(tilemap.isWall(x, y)) continue
         const height = noise.getValue(x / scale, y / scale)
-          * (island ? getGradient(x, y, tilemap.width, tilemap.height) : 1)
+          * (island ? getGradient(x, y, mapWidth, mapHeight) : 1)
         for (let index = 0; index < tiles.length; index++) {
           if (height < (index + 1) * heightStep) {
             if (tileIndices[index] > 0) {
