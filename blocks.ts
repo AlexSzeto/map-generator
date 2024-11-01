@@ -26,7 +26,7 @@ namespace mapGen {
     seededRandom.reset(newSeed)
   }
 
-  //% block="generate terrain with $tiles at frequency $scale as island $island || between row $top to $bottom column $left to $right"
+  //% block="generate terrain with $tiles at scale $scale as island $island || between row $top to $bottom column $left to $right"
   //% inlineInputMode=inline
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% scale.defl=10
@@ -73,7 +73,8 @@ namespace mapGen {
     }
   }
 
-  //% block="generate landscape with $layers at scale $scale from y $groundY rise $mountainHeight fall $valleyDepth underground layer thickness $layerDepth"
+  //% block="generate landscape with $layers at scale $scale from y $groundY || rise $mountainHeight fall $valleyDepth underground layer thickness $layerDepth"
+  //% inlineInputMode=inline
   //% layers.shadow="lists_create_with" layers.defl="tileset_tile_picker"
   //% scale.defl=10
   //% groundY.defl=12
