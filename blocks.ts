@@ -26,7 +26,7 @@ namespace mapGen {
     seededRandom.reset(newSeed)
   }
 
-  //% block="generate terrain with $tiles at scale $scale as island $island || between row $top to $bottom column $left to $right"
+  //% block="generate terrain with $tiles at scale $scale as island $island|| between left $left top $top right $right bottom $bottom"
   //% expandableArgumentMode="toggle"
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% scale.defl=10
