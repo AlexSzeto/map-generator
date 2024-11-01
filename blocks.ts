@@ -26,23 +26,38 @@ namespace mapGen {
     seededRandom.reset(newSeed)
   }
 
-  //% block="generate terrain with $tiles at scale $scale as island $island || on tilemap $tilemap"
+  //% block="generate terrain with $tiles at frequency $scale as island $island || between row $top to $bottom column $left to $right"
+  //% inlineInputMode=inline
   //% tiles.shadow="lists_create_with" tiles.defl="tileset_tile_picker"
   //% scale.defl=10
   //% tilemap.shadow="variables_get"
   //% tilemap.defl="tilemap"
-  export function generateTerrain(tiles: Image[], scale: number = 10, island: boolean = false, tilemap: tiles.TileMapData = null) {
-    if (tilemap == null) {
-      if (!game.currentScene().tileMap) return
-      tilemap = game.currentScene().tileMap.data
-    }
+  //% top.defl=0 bottom.defl=255 left.defl=0 right.defl=255
+  export function generateTerrain(
+    tiles: Image[],
+    scale: number = 10,
+    island: boolean = false,
+    top: number = 0,
+    bottom: number = 255,
+    left: number = 0,
+    right: number = 255
+  ) {
+    if (!game.currentScene().tileMap) return
+
+    const tilemap = game.currentScene().tileMap.data
+    top = Math.max(0, top)
+    bottom = Math.min(tilemap.height - 1, bottom)
+    left = Math.max(0, left)
+    right = Math.min(tilemap.width - 1, right)
+
+    if(top > bottom || left > right) return
 
     const noise = new mapGen.SimplexNoise()
     const tileIndices = getTileIndices(tilemap, tiles)
     const heightStep = 1.0 / tiles.length
 
-    for (let x = 0; x < tilemap.width; x++) {
-      for (let y = 0; y < tilemap.height; y++) {
+    for (let x = left; x <= right; x++) {
+      for (let y = left; y <= right; y++) {
         if(tilemap.isWall(x, y)) continue
         const height = noise.getValue(x / scale, y / scale)
           * (island ? getGradient(x, y, tilemap.width, tilemap.height) : 1)
@@ -58,7 +73,7 @@ namespace mapGen {
     }
   }
 
-  //% block="generate landscape with $layers at scale $scale from y $groundY rise height $mountainHeight fall depth $valleyDepth layer thickness $layerDepth || on tilemap $tilemap"
+  //% block="generate landscape with $layers at scale $scale from y $groundY rise $mountainHeight fall $valleyDepth underground layer thickness $layerDepth"
   //% layers.shadow="lists_create_with" layers.defl="tileset_tile_picker"
   //% scale.defl=10
   //% groundY.defl=12
@@ -66,7 +81,6 @@ namespace mapGen {
   //% valleyDepth.defl=4
   //% layerDepth.defl=8
   //% tilemap.shadow="variables_get"
-  //% tilemap.defl="tilemap"
   export function generateLandscape(
     layers: Image[],
     scale: number = 10,
@@ -74,13 +88,10 @@ namespace mapGen {
     mountainHeight: number = 6,
     valleyDepth: number = 4,
     layerDepth: number = 8,
-    tilemap: tiles.TileMapData = null
   ) {
-    if (tilemap == null) {
-      if (!game.currentScene().tileMap) return
-      tilemap = game.currentScene().tileMap.data
-    }
+    if (!game.currentScene().tileMap) return
 
+    const tilemap = game.currentScene().tileMap.data
     const noise = new mapGen.SimplexNoise()
     const layerIndices = getTileIndices(tilemap, layers)
 
