@@ -120,3 +120,17 @@ namespace mapGen {
     }
   }
 }
+
+namespace Math {
+  //% group="Seeded Random"
+  //% block="reset to seed $newSeed"
+  export function resetSeed(newSeed: number): void {
+    seededRandom.reset(newSeed)
+  }
+
+  //% group="Seeded Random"
+  //% block="pick seeded random $min to $max"
+  export function getSeededRandInt(min: number, max: number): number {
+    return Math.floor(seededRandom.next() * (max + 1 - min) + min)
+  }
+}
